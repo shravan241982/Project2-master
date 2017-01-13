@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/dispatcher-servlet.xml,
+            /WEB-INF/applicationContext.xml
+        </param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- Cometd Servlet -->
+<filter>
+     <filter-name>continuation</filter-name>
+     <filter-class>org.eclipse.jetty.continuation.ContinuationFilter</filter-class>
+</filter>
+<filter-mapping>
+     <filter-name>continuation</filter-name>
+     <url-pattern>/niitBlogger/*</url-pattern>
+</filter-mapping>
+
+	<servlet>
+		<servlet-name>niitBlogger</servlet-name>
+		<servlet-class>org.cometd.annotation.AnnotationCometdServlet</servlet-class>
+		<init-param>
+			<param-name>timeout</param-name>
+			<param-value>20000</param-value>
+		</init-param>
+		<init-param>
+			<param-name>interval</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<init-param>
+			<param-name>maxInterval</param-name>
+			<param-value>10000</param-value>
+		</init-param>
+		<init-param>
+			<param-name>maxLazyTimeout</param-name>
+			<param-value>5000</param-value>
+		</init-param>
+		<init-param>
+			<param-name>long-polling.multiSessionInterval</param-name>
+			<param-value>2000</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logLevel</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<init-param>
+			<param-name>transports</param-name>
+			<param-value>org.cometd.websocket.server.WebSocketTransport</param-value>
+		</init-param>
+		 <init-param>
+			<param-name>services</param-name>
+			<param-value>com.niitBlogger.service.impl.ChatService</param-value>
+		</init-param>
+		
+	</servlet>
+ 	  <servlet-mapping>
+		<servlet-name>niitBlogger</servlet-name>
+		<url-pattern>/niitBlogger/*</url-pattern>
+	</servlet-mapping> 
+</web-app>
